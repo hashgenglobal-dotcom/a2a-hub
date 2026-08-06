@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import pytest
+from pydantic import ValidationError
+
 from a2a_hub.models import CrawlResult, RawAgentCard, Resource, make_resource_id
 
 
@@ -28,6 +31,15 @@ def test_raw_agent_card_preserves_extra_fields() -> None:
     assert card.url == "https://example.com/a2a"
     assert card.model_extra is not None
     assert card.model_extra["customExtension"] == {"foo": 1}
+
+
+def test_raw_agent_card_is_immutable() -> None:
+    card = RawAgentCard.from_json_dict(
+        {"name": "Agent X", "url": "https://example.com/a2a"}
+    )
+
+    with pytest.raises(ValidationError):
+        card.name = "Mutated"  # type: ignore[misc]
 
 
 def test_resource_is_platform_entity() -> None:

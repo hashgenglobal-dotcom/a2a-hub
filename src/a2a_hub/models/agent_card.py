@@ -1,7 +1,29 @@
 """A2A Agent Card — protocol input only, not the platform entity.
 
-Flow:
-  HTTP Response → RawAgentCard → Validator → Resource → SQLite
+RawAgentCard is **immutable**. Never mutate it after construction.
+
+Correct pipeline:
+
+  HTTP Response
+       │
+       ▼
+  RawAgentCard   ← frozen snapshot of protocol input
+       │
+       ▼
+  Validator      ← reads raw; does not write back onto it
+       │
+       ▼
+  Normalizer     ← maps raw → Resource (new object)
+       │
+       ▼
+  Resource       ← canonical platform entity → SQLite
+
+Incorrect:
+
+  RawAgentCard → add normalized fields → save
+
+Preserving an untouched raw card matters later for trust scoring,
+auditing, dispute resolution, and reputation.
 
 Tolerant by design: extra fields are retained; required-field enforcement
 belongs in the validator (Sprint 1 Day 3), not in this model.
@@ -15,9 +37,12 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class RawAgentCard(BaseModel):
-    """Parsed Agent Card JSON before normalization into a Resource."""
+    """Immutable parsed Agent Card JSON before normalization into a Resource."""
 
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(
+        extra="allow",
+        frozen=True,
+    )
 
     name: str | None = None
     description: str | None = None
@@ -36,5 +61,5 @@ class RawAgentCard(BaseModel):
 
     @classmethod
     def from_json_dict(cls, payload: dict[str, Any]) -> RawAgentCard:
-        """Build a card from arbitrary JSON (extra keys preserved)."""
+        """Build a frozen card from arbitrary JSON (extra keys preserved)."""
         return cls.model_validate(payload)

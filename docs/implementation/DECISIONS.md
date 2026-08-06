@@ -81,3 +81,7 @@ Engineering diary for A2A Hub. Each entry records a decision, its rationale, and
 **Decision:** Domain models (`RawAgentCard`, `Resource`, `CrawlJob`/`CrawlResult`) exist before the crawler.
 **Reason:** HTTP output must not become the database model; flow is HTTP → RawAgentCard → Validator → Resource → SQLite.
 **Reference:** Pre-Day 2 product adjustment; ADR-002
+
+**Decision:** `RawAgentCard` is immutable (`frozen=True`). Never mutate raw input; Validator → Normalizer emits a new `Resource`.
+**Reason:** Untouched raw cards are required later for trust scoring, auditing, dispute resolution, and reputation.
+**Reference:** Pre-Day 2 product observation
