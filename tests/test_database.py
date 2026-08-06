@@ -1,4 +1,4 @@
-"""Database initialization tests."""
+"""Database initialization and migration tests."""
 
 from __future__ import annotations
 
@@ -14,7 +14,12 @@ def test_database_initialize_creates_mvp_tables(tmp_path: Path) -> None:
     db.initialize()
 
     assert db_path.exists()
-    assert db.table_names() == ["crawl_jobs", "crawl_results", "resources"]
+    assert set(db.table_names()) == {
+        "crawl_jobs",
+        "crawl_results",
+        "resources",
+        "schema_migrations",
+    }
 
 
 def test_database_initialize_is_idempotent(tmp_path: Path) -> None:
@@ -24,18 +29,14 @@ def test_database_initialize_is_idempotent(tmp_path: Path) -> None:
     db.initialize()
     db.initialize()
 
-    assert db.table_names() == ["crawl_jobs", "crawl_results", "resources"]
+    assert db.applied_migrations() == ["001_initial", "002_add_raw_crawl"]
 
 
 def test_resources_table_columns(tmp_path: Path) -> None:
     db = Database(tmp_path / "test.db")
     db.initialize()
 
-    with db.connect() as conn:
-        rows = conn.execute("PRAGMA table_info(resources)").fetchall()
-
-    columns = {row["name"] for row in rows}
-    assert columns == {
+    assert db.column_names("resources") == {
         "id",
         "name",
         "description",
@@ -45,3 +46,21 @@ def test_resources_table_columns(tmp_path: Path) -> None:
         "created_at",
         "updated_at",
     }
+
+
+def test_crawl_results_include_raw_payload_columns(tmp_path: Path) -> None:
+    db = Database(tmp_path / "test.db")
+    db.initialize()
+
+    columns = db.column_names("crawl_results")
+    assert {
+        "id",
+        "url",
+        "status_code",
+        "error",
+        "fetched_at",
+        "response_body",
+        "content_type",
+        "headers",
+        "duration_ms",
+    } <= columns

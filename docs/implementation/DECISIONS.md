@@ -69,3 +69,15 @@ Engineering diary for A2A Hub. Each entry records a decision, its rationale, and
 **Decision:** Day 1 SQLite schema uses `endpoint_url` / `publisher` / `skills` on `resources`, batch-oriented `crawl_jobs`, and URL-level `crawl_results`.
 **Reason:** Matches approved Day 1 foundation columns; richer DOMAIN_MODEL_MVP fields (`raw_json`, auth, etc.) land with parse/store work.
 **Reference:** Sprint 1 Day 1 implementation
+
+**Decision:** Add raw crawl columns before Day 2 (`response_body`, `content_type`, `headers`, `duration_ms`) via migration `002_add_raw_crawl`.
+**Reason:** Debugging validation failures requires the original HTTP payload and metadata.
+**Reference:** Pre-Day 2 product adjustment
+
+**Decision:** Introduce ordered SQL migrations (`store/migrations/*.sql` + `schema_migrations` table) before the schema grows further.
+**Reason:** `CREATE TABLE IF NOT EXISTS` alone does not support additive evolution safely.
+**Reference:** Pre-Day 2 product adjustment
+
+**Decision:** Domain models (`RawAgentCard`, `Resource`, `CrawlJob`/`CrawlResult`) exist before the crawler.
+**Reason:** HTTP output must not become the database model; flow is HTTP → RawAgentCard → Validator → Resource → SQLite.
+**Reference:** Pre-Day 2 product adjustment; ADR-002

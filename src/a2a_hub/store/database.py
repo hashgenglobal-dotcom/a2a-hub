@@ -1,47 +1,24 @@
-"""SQLite persistence for the A2A Hub MVP."""
+"""SQLite persistence with ordered SQL migrations."""
 
 from __future__ import annotations
 
 import logging
 import sqlite3
+from datetime import datetime, timezone
+from importlib import resources
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-SCHEMA_SQL = """
-CREATE TABLE IF NOT EXISTS resources (
-    id TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    description TEXT,
-    endpoint_url TEXT NOT NULL,
-    publisher TEXT,
-    skills TEXT,
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL
-);
+_MIGRATIONS_PACKAGE = "a2a_hub.store.migrations"
 
-CREATE TABLE IF NOT EXISTS crawl_jobs (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    started_at TEXT NOT NULL,
-    completed_at TEXT,
-    status TEXT NOT NULL
-);
 
-CREATE TABLE IF NOT EXISTS crawl_results (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    url TEXT NOT NULL,
-    status_code INTEGER,
-    error TEXT,
-    fetched_at TEXT NOT NULL
-);
-
-CREATE INDEX IF NOT EXISTS idx_resources_name ON resources(name);
-CREATE INDEX IF NOT EXISTS idx_crawl_results_url ON crawl_results(url);
-"""
+def _utc_now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
 class Database:
-    """Thin SQLite wrapper for schema initialization and connections."""
+    """Thin SQLite wrapper: connections + schema migrations."""
 
     def __init__(self, path: Path) -> None:
         self.path = path
@@ -55,20 +32,82 @@ class Database:
         return conn
 
     def initialize(self) -> None:
-        """Create MVP tables and indexes if they do not exist."""
+        """Apply all pending SQL migrations in version order."""
         logger.info(
             "Initializing SQLite database",
             extra={"fields": {"database_path": str(self.path)}},
         )
         with self.connect() as conn:
-            conn.executescript(SCHEMA_SQL)
-            conn.commit()
+            self._ensure_migrations_table(conn)
+            applied = self._applied_versions(conn)
+            for version, sql in self._load_migrations():
+                if version in applied:
+                    continue
+                logger.info(
+                    "Applying migration",
+                    extra={"fields": {"version": version}},
+                )
+                conn.executescript(sql)
+                conn.execute(
+                    "INSERT INTO schema_migrations (version, applied_at) VALUES (?, ?)",
+                    (version, _utc_now_iso()),
+                )
+                conn.commit()
         logger.info("SQLite schema ready")
 
     def table_names(self) -> list[str]:
         """Return user table names (excludes sqlite internal tables)."""
         with self.connect() as conn:
             rows = conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"
+                "SELECT name FROM sqlite_master "
+                "WHERE type='table' AND name NOT LIKE 'sqlite_%' "
+                "ORDER BY name"
             ).fetchall()
         return [str(row["name"]) for row in rows]
+
+    def applied_migrations(self) -> list[str]:
+        """Return applied migration versions in order."""
+        with self.connect() as conn:
+            self._ensure_migrations_table(conn)
+            rows = conn.execute(
+                "SELECT version FROM schema_migrations ORDER BY version"
+            ).fetchall()
+        return [str(row["version"]) for row in rows]
+
+    def column_names(self, table: str) -> set[str]:
+        """Return column names for a table."""
+        with self.connect() as conn:
+            rows = conn.execute(f"PRAGMA table_info({table})").fetchall()
+        return {str(row["name"]) for row in rows}
+
+    @staticmethod
+    def _ensure_migrations_table(conn: sqlite3.Connection) -> None:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS schema_migrations (
+                version TEXT PRIMARY KEY,
+                applied_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.commit()
+
+    @staticmethod
+    def _applied_versions(conn: sqlite3.Connection) -> set[str]:
+        rows = conn.execute("SELECT version FROM schema_migrations").fetchall()
+        return {str(row["version"]) for row in rows}
+
+    @staticmethod
+    def _load_migrations() -> list[tuple[str, str]]:
+        """Load `NNN_name.sql` files from the migrations package."""
+        migration_root = resources.files(_MIGRATIONS_PACKAGE)
+        items: list[tuple[str, str]] = []
+        for entry in migration_root.iterdir():
+            name = entry.name
+            if not name.endswith(".sql"):
+                continue
+            version = name[: -len(".sql")]
+            sql = entry.read_text(encoding="utf-8")
+            items.append((version, sql))
+        items.sort(key=lambda item: item[0])
+        return items
