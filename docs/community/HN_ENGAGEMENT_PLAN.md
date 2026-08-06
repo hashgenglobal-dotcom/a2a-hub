@@ -48,14 +48,54 @@
 
 ---
 
-## Weekly Participation Goals
+## Account Maturity Status
 
-| Week | Goal | Time |
-|------|------|------|
-| 1 | Read HN daily. Find 3 threads to comment on. | 15 min/day |
-| 2 | Comment on 5 threads. One substantive technical comment. | 20 min/day |
-| 3 | Continue. Identify if Show HN eligibility has changed. | 15 min/day |
-| 4+ | Re-evaluate. If eligible, post Show HN. | — |
+**Current status:** Account cannot post comments or Show HN submissions.
+**Reason:** New account with insufficient community history.
+**Policy:** Do not attempt bypass methods. Do not create multiple accounts.
+**Expected duration:** 2-4 weeks of passive participation (reading, upvoting).
+
+## No-Bypass Policy
+
+- Do not create multiple accounts
+- Do not ask others to post on your behalf
+- Do not use VPN/proxy to circumvent restrictions
+- Do not complain about the restriction on HN or elsewhere
+- Do not rush the process
+
+The restriction exists to prevent spam. Respecting it is part of building trust.
+
+## Alternative Channels During Waiting Period
+
+HN is a long-term channel. During the waiting period, focus on:
+
+| Channel | Priority | Why |
+|---------|----------|-----|
+| GitHub Discussions | High | Already active. Two discussions posted. |
+| LinkedIn | High | No restrictions. Professional audience. |
+| X/Twitter | Medium | Short-form technical audience. |
+| Direct outreach | High | One-on-one conversations with builders. |
+| Reddit | Medium | Technical communities, but check rules carefully. |
+
+## Revisit Criteria
+
+Re-evaluate HN every 2 weeks:
+
+- [ ] Can the account post comments? (Test on a low-traffic thread)
+- [ ] Can the account submit a Show HN? (Check submission page)
+- [ ] Has the account been active for 4+ weeks?
+- [ ] Are there meaningful discussions to reference?
+
+When all criteria are met, post the Show HN draft.
+
+## Long-Term HN Strategy
+
+| Phase | Timeline | Action |
+|-------|----------|--------|
+| Passive | Weeks 1-4 | Read daily. Upvote quality content. Save relevant threads. |
+| Active | Weeks 4-8 | Comment on technical threads. Build reputation. |
+| Launch | Week 8+ | Post Show HN. Participate in the discussion. |
+| Ongoing | Continuous | Engage in agent protocol discussions as a community member. |
 
 ---
 
