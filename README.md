@@ -12,13 +12,13 @@ This repository intentionally separates long-term vision from the current implem
 
 **Only one document defines what engineers build:**
 
-[`docs/implementation/MVP_SPEC.md`](docs/implementation/MVP_SPEC.md)
+[`docs/implementation/BUILD_SPEC.md`](docs/implementation/BUILD_SPEC.md)
 
 Everything else exists for context.
 
 ### Priority Order
 
-1. `docs/implementation/MVP_SPEC.md` — **Implementation source of truth. Wins all conflicts.**
+1. `docs/implementation/BUILD_SPEC.md` — **Implementation source of truth. Wins all conflicts.**
 2. `docs/implementation/SPRINT_XX.md` — Current sprint plan.
 3. `docs/implementation/BACKLOG.md` — Prioritized backlog.
 4. `docs/architecture/ARCHITECTURE_MVP.md` — Current architecture.
@@ -26,7 +26,7 @@ Everything else exists for context.
 6. `docs/architecture/ENGINEERING_PRINCIPLES.md` — Engineering standards.
 7. `docs/strategy/VISION.md` — Long-term product vision.
 
-If any document conflicts with `MVP_SPEC.md`, `MVP_SPEC.md` always wins.
+If any document conflicts with `BUILD_SPEC.md`, `BUILD_SPEC.md` always wins.
 
 Target architecture documents (`ARCHITECTURE_TARGET.md`, `DOMAIN_MODEL_TARGET.md`) never define current implementation. They exist for planning only.
 
@@ -60,7 +60,7 @@ Open http://localhost:8000 in a browser.
 
 | Path | Purpose |
 |------|---------|
-| [`docs/implementation/MVP_SPEC.md`](docs/implementation/MVP_SPEC.md) | **Start here.** Implementation contract for the MVP. |
+| [`docs/implementation/BUILD_SPEC.md`](docs/implementation/BUILD_SPEC.md) | **Start here.** Implementation contract for the MVP. |
 | [`docs/implementation/SPRINT_01.md`](docs/implementation/SPRINT_01.md) | Sprint 1 plan with day-level tasks. |
 | [`docs/architecture/ARCHITECTURE_MVP.md`](docs/architecture/ARCHITECTURE_MVP.md) | Current architecture (single process, SQLite). |
 | [`docs/architecture/ARCHITECTURE_TARGET.md`](docs/architecture/ARCHITECTURE_TARGET.md) | Target architecture (Phase 2+). |
