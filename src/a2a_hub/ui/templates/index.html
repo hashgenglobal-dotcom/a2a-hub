@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{% if q %}Search: {{ q }} — {% endif %}A2A Hub{% endblock %}
+{% block content %}
+  <form class="search-box" method="get" action="/">
+    <input
+      type="search"
+      name="q"
+      value="{{ q or '' }}"
+      placeholder="Search by name, description, or skill…"
+      aria-label="Search resources"
+      autofocus
+    >
+    <button type="submit">Search</button>
+  </form>
+
+  {% if q %}
+    <p class="meta">
+      {% if total == 0 %}
+        No resources matched “{{ q }}”.
+      {% else %}
+        {{ total }} result{% if total != 1 %}s{% endif %} for “{{ q }}”
+      {% endif %}
+    </p>
+
+    {% for item in results %}
+      <article class="result">
+        <h2><a href="/resources/{{ item.id }}">{{ item.name }}</a></h2>
+        {% if item.description %}<p>{{ item.description }}</p>{% endif %}
+        <p><strong>Endpoint:</strong> <code>{{ item.endpoint_url }}</code></p>
+        {% if item.skills %}
+          <div class="skills">
+            {% for skill in item.skills %}
+              <span class="skill">
+                {% if skill is mapping %}
+                  {{ skill.get('name') or skill.get('id') or skill }}
+                {% else %}
+                  {{ skill }}
+                {% endif %}
+              </span>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </article>
+    {% else %}
+      {% if q %}
+        <p class="empty">Try another keyword, or run <code>python -m a2a_hub crawl</code> to index seeds.</p>
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    <p class="empty">Enter a keyword to search indexed resources (name, description, skills).</p>
+  {% endif %}
+{% endblock %}

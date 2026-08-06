@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}{{ resource.name }} — A2A Hub{% endblock %}
+{% block content %}
+  <p class="meta"><a href="/{% if q %}?q={{ q | urlencode }}{% endif %}">← Back to search</a></p>
+
+  <article class="result detail">
+    <h1 style="margin-top:0">{{ resource.name }}</h1>
+    {% if resource.description %}
+      <p>{{ resource.description }}</p>
+    {% endif %}
+
+    <dl>
+      <dt>Resource ID</dt>
+      <dd><code>{{ resource.id }}</code></dd>
+
+      <dt>Endpoint URL</dt>
+      <dd><code>{{ resource.endpoint_url }}</code></dd>
+
+      <dt>Publisher</dt>
+      <dd>{{ resource.publisher }}</dd>
+
+      <dt>Skills</dt>
+      <dd>
+        {% if resource.skills %}
+          <div class="skills">
+            {% for skill in resource.skills %}
+              <span class="skill">
+                {% if skill is mapping %}
+                  {{ skill.get('name') or skill.get('id') or skill }}
+                {% else %}
+                  {{ skill }}
+                {% endif %}
+              </span>
+            {% endfor %}
+          </div>
+        {% else %}
+          <span class="empty">None listed</span>
+        {% endif %}
+      </dd>
+    </dl>
+  </article>
+{% endblock %}
