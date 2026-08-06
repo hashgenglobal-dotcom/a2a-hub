@@ -6,7 +6,8 @@ set -e
 
 if [ ! -f "$A2A_HUB_DATABASE_PATH" ]; then
     echo "No database found. Running initial crawl..."
-    python -m a2a_hub crawl || echo "Crawl completed (some seeds may have failed)"
+    python -m a2a_hub crawl || true
+    echo "Crawl completed."
 else
     echo "Database exists. Skipping initial crawl."
 fi
