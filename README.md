@@ -2,8 +2,9 @@
 
 **The trust infrastructure / discovery layer for the open Agent Internet.**
 
-**Version:** `0.1.0` (MVP)  
-**License:** Apache 2.0
+**Version:** `0.1.0` (MVP)  \
+**License:** Apache 2.0  \
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://gallant-manifestation-production-d238.up.railway.app)
 
 A2A Hub is an open-source registry that helps developers and systems **find** A2A-compatible AI agents. It crawls Agent Cards, validates and normalizes them into canonical **Resources**, and exposes keyword search via API and a minimal web UI.
 
@@ -65,9 +66,28 @@ Single process. SQLite file. No Postgres, Redis, background workers, or auth in 
 | Keyword Search API | Done |
 | Minimal Jinja2 discovery UI | Done |
 | Docker image | Done |
-| Public cloud deploy | Manual next step |
+| Public cloud deploy | [Live demo](https://gallant-manifestation-production-d238.up.railway.app) |
 
 **Not in v0.1.0:** trust scoring, embeddings, authentication, federation, Postgres, background workers.
+
+---
+
+## Live Demo
+
+Try it now: [https://gallant-manifestation-production-d238.up.railway.app](https://gallant-manifestation-production-d238.up.railway.app)
+
+```bash
+# Health
+curl -s https://gallant-manifestation-production-d238.up.railway.app/health
+
+# Search
+curl -s "https://gallant-manifestation-production-d238.up.railway.app/search?q=resume"
+
+# UI
+open https://gallant-manifestation-production-d238.up.railway.app
+```
+
+Deployed on Railway. Single process. SQLite volume. Auto-crawls on first boot.
 
 ---
 
