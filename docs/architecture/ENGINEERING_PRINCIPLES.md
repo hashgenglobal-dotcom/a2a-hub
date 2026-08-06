@@ -38,6 +38,16 @@ Every subsystem must be replaceable without changing other subsystems.
 
 **Rule:** No layer depends on the implementation details of another layer. The Resource model is the contract between layers.
 
+### 2.1 Never Mutate RawAgentCard
+
+`RawAgentCard` is an immutable snapshot of protocol input. Validation and normalization must produce a new `Resource`. They must not write normalized fields back onto the raw card.
+
+```
+HTTP Response → RawAgentCard → Validator → Normalizer → Resource → SQLite
+```
+
+**Rule:** Never mutate `RawAgentCard`. Preserve raw input for trust scoring, auditing, dispute resolution, and reputation.
+
 ---
 
 ## 3. Simplicity

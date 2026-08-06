@@ -45,3 +45,43 @@ Engineering diary for A2A Hub. Each entry records a decision, its rationale, and
 **Decision:** No rate limiting in MVP.
 **Reason:** Premature optimization. Add when abuse is observed.
 **Reference:** ADR-010
+
+---
+
+## 2026-08-06 — Sprint 1 Day 1
+
+**Decision:** Hybrid seeds (checked-in sample Agent Cards + configurable URL list). Tests must not require live external agents.
+**Reason:** Deterministic CI and local development; real public URLs can be added later without changing the crawl pipeline.
+**Reference:** Product approval for Sprint 1 Day 1
+
+**Decision:** Tolerant Agent Card validation (required: name, endpoint URL, valid JSON). Optional fields warn; raw crawl payloads preserved for debugging (Day 2+).
+**Reason:** Real-world cards are often incomplete; rejecting them would empty the index.
+**Reference:** Product approval for Sprint 1 Day 1
+
+**Decision:** Resource IDs are stable hashes of the canonical Agent Card URL; publisher is always `unverified` in MVP.
+**Reason:** No trust verification in MVP; Resource remains the canonical entity (ADR-002).
+**Reference:** Product approval for Sprint 1 Day 1; ADR-002
+
+**Decision:** CLI crawl only — never start crawl on `serve` (no workers, no schedulers).
+**Reason:** Reinforces ADR-008; keeps API boot non-blocking on PaaS.
+**Reference:** ADR-008; product approval for Sprint 1 Day 1
+
+**Decision:** Day 1 SQLite schema uses `endpoint_url` / `publisher` / `skills` on `resources`, batch-oriented `crawl_jobs`, and URL-level `crawl_results`.
+**Reason:** Matches approved Day 1 foundation columns; richer DOMAIN_MODEL_MVP fields (`raw_json`, auth, etc.) land with parse/store work.
+**Reference:** Sprint 1 Day 1 implementation
+
+**Decision:** Add raw crawl columns before Day 2 (`response_body`, `content_type`, `headers`, `duration_ms`) via migration `002_add_raw_crawl`.
+**Reason:** Debugging validation failures requires the original HTTP payload and metadata.
+**Reference:** Pre-Day 2 product adjustment
+
+**Decision:** Introduce ordered SQL migrations (`store/migrations/*.sql` + `schema_migrations` table) before the schema grows further.
+**Reason:** `CREATE TABLE IF NOT EXISTS` alone does not support additive evolution safely.
+**Reference:** Pre-Day 2 product adjustment
+
+**Decision:** Domain models (`RawAgentCard`, `Resource`, `CrawlJob`/`CrawlResult`) exist before the crawler.
+**Reason:** HTTP output must not become the database model; flow is HTTP → RawAgentCard → Validator → Resource → SQLite.
+**Reference:** Pre-Day 2 product adjustment; ADR-002
+
+**Decision:** `RawAgentCard` is immutable (`frozen=True`). Never mutate raw input; Validator → Normalizer emits a new `Resource`.
+**Reason:** Untouched raw cards are required later for trust scoring, auditing, dispute resolution, and reputation.
+**Reference:** Pre-Day 2 product observation

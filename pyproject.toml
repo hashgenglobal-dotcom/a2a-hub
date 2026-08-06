@@ -21,9 +21,18 @@ dev = [
     "httpx>=0.28.0",
 ]
 
+[project.scripts]
+a2a-hub = "a2a_hub.main:main"
+
 [build-system]
 requires = ["setuptools>=75.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"a2a_hub.store" = ["migrations/*.sql"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
