@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -12,6 +13,8 @@ from a2a_hub.api.routes import router
 from a2a_hub.config import Settings, get_settings
 from a2a_hub.store.database import Database
 from a2a_hub.ui.views import ui_router
+
+logger = logging.getLogger(__name__)
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -29,7 +32,20 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         db = Database(settings.database_path)
         db.initialize()
         app.state.db = db
+        logger.info(
+            "Application startup complete",
+            extra={
+                "fields": {
+                    "app": settings.app_name,
+                    "version": __version__,
+                    "database_path": str(settings.database_path),
+                    "host": settings.host,
+                    "port": settings.port,
+                }
+            },
+        )
         yield
+        logger.info("Application shutdown")
 
     app = FastAPI(
         title=settings.app_name,

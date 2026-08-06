@@ -20,7 +20,11 @@ def test_health_endpoint_starts_and_returns_ok(tmp_path: Path) -> None:
         response = client.get("/health")
 
     assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+    body = response.json()
+    assert body["status"] == "ok"
+    assert body["database"] == "connected"
+    assert body["resources"] == 0
+    assert "version" in body
     assert (tmp_path / "app.db").exists()
 
 
