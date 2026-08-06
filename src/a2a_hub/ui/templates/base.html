@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}A2A Hub{% endblock %}</title>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --ink: #1a1a1a;
+      --muted: #5c5c5c;
+      --accent: #0b6e4f;
+      --card: #ffffff;
+      --line: #ddd6c8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #ebe6dc, var(--bg) 45%);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 1rem;
+    }
+    .brand { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
+    .brand span { color: var(--accent); }
+    .tagline { color: var(--muted); font-size: 0.95rem; }
+    .search-box {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .search-box input {
+      flex: 1;
+      padding: 0.75rem 0.9rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: var(--card);
+    }
+    .search-box button {
+      padding: 0.75rem 1.1rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .meta { color: var(--muted); margin-bottom: 1rem; }
+    .result {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+    .result h2 { margin: 0 0 0.35rem; font-size: 1.15rem; }
+    .result p { margin: 0.25rem 0; color: var(--muted); }
+    .skills { margin-top: 0.5rem; }
+    .skill {
+      display: inline-block;
+      background: #e7f3ee;
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.15rem 0.55rem;
+      font-size: 0.8rem;
+      margin: 0.15rem 0.2rem 0 0;
+    }
+    .detail dl { display: grid; grid-template-columns: 8rem 1fr; gap: 0.5rem 1rem; }
+    .detail dt { color: var(--muted); font-weight: 600; }
+    .detail dd { margin: 0; word-break: break-word; }
+    .empty { color: var(--muted); padding: 1rem 0; }
+    footer { margin-top: 2.5rem; color: var(--muted); font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <a class="brand" href="/">A2A <span>Hub</span></a>
+        <div class="tagline">Discover A2A-compatible AI resources</div>
+      </div>
+      <a href="/docs">API docs</a>
+    </header>
+    {% block content %}{% endblock %}
+    <footer>A2A Hub MVP — keyword discovery over crawled Agent Cards</footer>
+  </div>
+</body>
+</html>

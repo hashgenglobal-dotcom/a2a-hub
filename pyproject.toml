@@ -33,6 +33,7 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 "a2a_hub.store" = ["migrations/*.sql"]
+"a2a_hub.ui" = ["templates/*.html"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

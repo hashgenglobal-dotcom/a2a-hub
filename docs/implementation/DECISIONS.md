@@ -153,3 +153,11 @@ Engineering diary for A2A Hub. Each entry records a decision, its rationale, and
 **Decision:** Routes stay thin in `api/routes.py`; `ResourceRepository.search_resources` / `get_resource_by_id` own SQL.
 **Reason:** Keep FastAPI free of query logic; Resource remains canonical entity.
 **Reference:** Sprint 1 Day 4
+
+---
+
+## 2026-08-06 — Sprint 1 Day 5
+
+**Decision:** Minimal Jinja2 UI at `GET /` (search) and HTML `GET /resources/{id}` via Accept negotiation; JSON API unchanged for non-HTML clients.
+**Reason:** Human discovery without a frontend framework; no duplicated search SQL (repository shared).
+**Reference:** Sprint 1 Day 5 / Task #5; BUILD_SPEC capability 6
