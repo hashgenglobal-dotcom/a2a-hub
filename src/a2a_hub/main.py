@@ -19,31 +19,31 @@ logger = logging.getLogger(__name__)
 
 
 def cmd_crawl(settings: Settings) -> int:
-    """Discover seeds → async fetch → store crawl_results (no parse/validate)."""
+    """Seeds → fetch → store CrawlResult → validate → normalize → upsert Resource."""
     db = Database(settings.database_path)
     db.initialize()
 
-    results = asyncio.run(
+    summary = asyncio.run(
         run_crawl(
             db,
             seeds_path=settings.seeds_path,
             timeout_seconds=settings.crawler_timeout_seconds,
         )
     )
-    errors = sum(1 for r in results if r.error)
     logger.info(
         "Crawl command finished",
         extra={
             "fields": {
                 "database_path": str(settings.database_path),
-                "fetched": len(results),
-                "errors": errors,
+                "fetched": len(summary.crawl_results),
+                "fetch_errors": summary.fetch_errors,
+                "resources_upserted": summary.resources_upserted,
             }
         },
     )
-    # Non-zero only if every fetch failed or nothing was fetched
-    if not results or errors == len(results):
+    if not summary.crawl_results or summary.fetch_errors == len(summary.crawl_results):
         return 1
+    # Fetch succeeded for at least one seed; adapt failures are non-fatal for exit code
     return 0
 
 
