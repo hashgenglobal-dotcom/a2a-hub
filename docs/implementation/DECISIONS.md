@@ -133,3 +133,23 @@ Engineering diary for A2A Hub. Each entry records a decision, its rationale, and
 **Decision:** Resource upsert keys on stable `make_resource_id(card_url, name)`; re-crawl updates fields and `updated_at`, preserves `created_at`.
 **Reason:** Duplicate crawls must not create duplicate Resources.
 **Reference:** Sprint 1 Day 3; identity/dedup approval
+
+**Decision (deferred):** Resource validation metadata (`validation_status`, `validation_warnings`, `last_verified_at`) is P1.6 — needed for trust history, not Task #4.
+**Reason:** Keep search API schema lean; trust layer consumes this later.
+**Reference:** Pre-Task #4 recommendation
+
+**Decision (deferred):** Resource version history (`resource_versions`) is P2.0c — future evolution/reputation tracking only.
+**Reason:** Not required for MVP keyword discovery.
+**Reference:** Pre-Task #4 recommendation
+
+---
+
+## 2026-08-06 — Sprint 1 Day 4
+
+**Decision:** Public read-only API: `GET /health`, `GET /search?q=&limit=`, `GET /resources/{id}`. Search response uses `results` + keyword LIKE over name/description/skills.
+**Reason:** MVP discovery only; no auth, embeddings, or ranking (ADR-003, ADR-009).
+**Reference:** Sprint 1 Day 4 / Task #4
+
+**Decision:** Routes stay thin in `api/routes.py`; `ResourceRepository.search_resources` / `get_resource_by_id` own SQL.
+**Reason:** Keep FastAPI free of query logic; Resource remains canonical entity.
+**Reference:** Sprint 1 Day 4
