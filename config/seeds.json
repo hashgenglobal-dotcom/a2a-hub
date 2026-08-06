@@ -1,0 +1,19 @@
+{
+  "seeds": [
+    {
+      "url": "file:samples/agent_cards/sample_resume_parser.json",
+      "note": "Deterministic local fixture — no network required"
+    },
+    {
+      "url": "file:samples/agent_cards/sample_echo_agent.json",
+      "note": "Deterministic local fixture — no network required"
+    }
+  ],
+  "public_seeds": [
+    {
+      "url": "https://example.com/.well-known/agent.json",
+      "note": "Placeholder — replace with real public Agent Card URLs when available",
+      "enabled": false
+    }
+  ]
+}

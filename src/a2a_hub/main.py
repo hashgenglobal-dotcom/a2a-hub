@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import asyncio
 import logging
 import sys
 
@@ -10,6 +11,7 @@ import uvicorn
 
 from a2a_hub.api.app import create_app
 from a2a_hub.config import Settings, get_settings
+from a2a_hub.crawler.runner import run_crawl
 from a2a_hub.logging import setup_logging
 from a2a_hub.store.database import Database
 
@@ -17,18 +19,31 @@ logger = logging.getLogger(__name__)
 
 
 def cmd_crawl(settings: Settings) -> int:
-    """Initialize storage for crawl. Fetch pipeline is Sprint 1 Day 2."""
+    """Discover seeds → async fetch → store crawl_results (no parse/validate)."""
     db = Database(settings.database_path)
     db.initialize()
+
+    results = asyncio.run(
+        run_crawl(
+            db,
+            seeds_path=settings.seeds_path,
+            timeout_seconds=settings.crawler_timeout_seconds,
+        )
+    )
+    errors = sum(1 for r in results if r.error)
     logger.info(
-        "Crawl command ready — fetch/parse pipeline not implemented yet (Day 2)",
+        "Crawl command finished",
         extra={
             "fields": {
                 "database_path": str(settings.database_path),
-                "crawler_timeout_seconds": settings.crawler_timeout_seconds,
+                "fetched": len(results),
+                "errors": errors,
             }
         },
     )
+    # Non-zero only if every fetch failed or nothing was fetched
+    if not results or errors == len(results):
+        return 1
     return 0
 
 
@@ -64,7 +79,6 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> None:
     """Parse CLI args and dispatch to crawl or serve."""
-    # Clear settings cache so tests/env changes are respected
     get_settings.cache_clear()
     settings = get_settings()
     setup_logging(settings.log_level)

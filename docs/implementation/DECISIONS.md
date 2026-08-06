@@ -85,3 +85,23 @@ Engineering diary for A2A Hub. Each entry records a decision, its rationale, and
 **Decision:** `RawAgentCard` is immutable (`frozen=True`). Never mutate raw input; Validator → Normalizer emits a new `Resource`.
 **Reason:** Untouched raw cards are required later for trust scoring, auditing, dispute resolution, and reputation.
 **Reference:** Pre-Day 2 product observation
+
+---
+
+## 2026-08-06 — Sprint 1 Day 2
+
+**Decision:** Seed URLs live in `config/seeds.json` (override via `A2A_HUB_SEEDS_PATH`), not in crawler business logic. `scripts/seed_urls.py` lists them.
+**Reason:** Hybrid local fixtures + future public URLs without code changes.
+**Reference:** Sprint 1 Day 2
+
+**Decision:** Local deterministic seeds use `file:` URLs to `samples/agent_cards/*.json`. Fetcher supports `file:` without aiohttp.
+**Reason:** Tests and local crawl must not depend on external agents being online.
+**Reference:** Sprint 1 Day 2; approved hybrid seed strategy
+
+**Decision:** Day 2 crawl persists only `crawl_jobs` + `crawl_results` (raw). No parse, validate, or Resource writes.
+**Reason:** Pipeline stage discipline — Discover → Fetch only.
+**Reference:** Sprint 1 Day 2; BUILD_SPEC pipeline
+
+**Decision:** Crawler User-Agent is `A2A-Hub-Crawler/0.1`. Non-200 and non-JSON content types set `CrawlResult.error` but still preserve `response_body` when available.
+**Reason:** Debuggability without failing the whole batch silently.
+**Reference:** Sprint 1 Day 2

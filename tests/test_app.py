@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -31,8 +32,20 @@ def test_cli_parser_requires_command() -> None:
     assert parser.parse_args(["serve"]).command == "serve"
 
 
-def test_cmd_crawl_initializes_database(tmp_path: Path) -> None:
-    settings = Settings(database_path=tmp_path / "crawl.db", log_level="WARNING")
+def test_cmd_crawl_initializes_database_and_stores_results(tmp_path: Path) -> None:
+    card = tmp_path / "agent.json"
+    card.write_text('{"name":"Smoke","url":"https://example.com/a2a"}', encoding="utf-8")
+    seeds = tmp_path / "seeds.json"
+    seeds.write_text(
+        json.dumps({"seeds": [{"url": card.as_uri()}], "public_seeds": []}),
+        encoding="utf-8",
+    )
+
+    settings = Settings(
+        database_path=tmp_path / "crawl.db",
+        seeds_path=seeds,
+        log_level="WARNING",
+    )
     code = cmd_crawl(settings)
 
     assert code == 0

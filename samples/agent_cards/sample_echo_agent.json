@@ -1,0 +1,19 @@
+{
+  "name": "Sample Echo Agent",
+  "description": "Second deterministic fixture for multi-seed crawl tests.",
+  "url": "https://example.com/a2a/echo",
+  "provider": {
+    "organization": "A2A Hub Fixtures"
+  },
+  "capabilities": {
+    "streaming": false
+  },
+  "skills": [
+    {
+      "id": "echo",
+      "name": "Echo",
+      "description": "Echoes input messages"
+    }
+  ],
+  "version": "1.0.0"
+}

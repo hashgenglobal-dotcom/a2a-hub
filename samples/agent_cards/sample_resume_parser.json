@@ -1,0 +1,21 @@
+{
+  "name": "Sample Resume Parser",
+  "description": "Deterministic fixture agent for A2A Hub local development and tests.",
+  "url": "https://example.com/a2a/resume-parser",
+  "provider": {
+    "organization": "A2A Hub Fixtures"
+  },
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false
+  },
+  "skills": [
+    {
+      "id": "resume-parsing",
+      "name": "Resume Parsing",
+      "description": "Extract structured fields from resumes"
+    }
+  ],
+  "version": "1.0.0",
+  "protocolVersion": "0.2.1"
+}

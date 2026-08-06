@@ -7,6 +7,8 @@ data/
 *.sqlite
 *.sqlite3
 .pytest_cache/
+samples/**/*.bak
+
 dist/
 build/
 *.egg-info/
