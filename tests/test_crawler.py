@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-import asyncio
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock
 
 import aiohttp
 import pytest
 
-from a2a_hub.crawler.fetcher import Fetcher, fetch_all
+from a2a_hub.crawler.fetcher import Fetcher
 from a2a_hub.crawler.models import USER_AGENT
 
 
