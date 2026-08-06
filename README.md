@@ -5,7 +5,7 @@
 **Version:** `0.1.0` (MVP)  
 **License:** Apache 2.0
 
-A2A Hub is an open-source registry that helps developers and systems **find** A2A-compatible AI agents. It crawls Agent Cards, validates them, stores canonical **Resources**, and exposes keyword search via API and a minimal web UI.
+A2A Hub is an open-source registry that helps developers and systems **find** A2A-compatible AI agents. It crawls Agent Cards, validates and normalizes them into canonical **Resources**, and exposes keyword search via API and a minimal web UI.
 
 > Long-term vision: Universal Agent Control Plane (discovery → trust → federation). See [`docs/strategy/VISION.md`](docs/strategy/VISION.md).  
 > **Build contract:** [`docs/implementation/BUILD_SPEC.md`](docs/implementation/BUILD_SPEC.md) wins all implementation conflicts.
