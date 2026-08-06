@@ -117,3 +117,19 @@ Engineering diary for A2A Hub. Each entry records a decision, its rationale, and
 **Decision (deferred):** Crawler safety checklist (max body size, robots policy, allow/deny, SSRF, redirect limits) is P1.5 — before public exposure, not Sprint 1 Day 2/3.
 **Reason:** Current seeds are local fixtures + explicitly enabled public URLs only.
 **Reference:** Pre-Task #3 recommendation
+
+---
+
+## 2026-08-06 — Sprint 1 Day 3
+
+**Decision:** Tolerant validation requires only `name` + Agent Card `url` (endpoint). Missing description/skills/capabilities/provider are warnings, not failures.
+**Reason:** Real-world cards are often incomplete; empty index is worse than sparse metadata.
+**Reference:** Sprint 1 Day 3; approved validation strategy
+
+**Decision:** Adapter pipeline is CrawlResult → RawAgentCard → Validator → Normalizer → Resource; invalid cards skip Resource upsert without aborting the crawl job.
+**Reason:** Pipeline resilience; raw crawl rows remain for debugging.
+**Reference:** Sprint 1 Day 3; immutable RawAgentCard rule
+
+**Decision:** Resource upsert keys on stable `make_resource_id(card_url, name)`; re-crawl updates fields and `updated_at`, preserves `created_at`.
+**Reason:** Duplicate crawls must not create duplicate Resources.
+**Reference:** Sprint 1 Day 3; identity/dedup approval
