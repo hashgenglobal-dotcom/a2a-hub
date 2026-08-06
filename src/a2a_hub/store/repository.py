@@ -155,6 +155,10 @@ class ResourceRepository:
             ).fetchone()
         return _row_to_resource(row) if row else None
 
+    def get_resource_by_id(self, resource_id: str) -> Resource | None:
+        """Alias for :meth:`get` (API retrieval layer)."""
+        return self.get(resource_id)
+
     def list_all(self) -> list[Resource]:
         with self._db.connect() as conn:
             rows = conn.execute(
@@ -166,6 +170,50 @@ class ResourceRepository:
         with self._db.connect() as conn:
             row = conn.execute("SELECT COUNT(*) AS c FROM resources").fetchone()
         return int(row["c"]) if row else 0
+
+    def search_resources(
+        self,
+        query: str,
+        *,
+        limit: int = 20,
+        offset: int = 0,
+    ) -> tuple[list[Resource], int]:
+        """Keyword search over name, description, and skills JSON (SQL LIKE).
+
+        Returns ``(matches, total_matching)``. Empty query returns no rows.
+        """
+        q = query.strip()
+        if not q:
+            return [], 0
+
+        limit = max(1, min(limit, 100))
+        offset = max(0, offset)
+        pattern = f"%{q}%"
+
+        where = """
+            name LIKE ? COLLATE NOCASE
+            OR IFNULL(description, '') LIKE ? COLLATE NOCASE
+            OR IFNULL(skills, '') LIKE ? COLLATE NOCASE
+        """
+        params: tuple[object, ...] = (pattern, pattern, pattern)
+
+        with self._db.connect() as conn:
+            total_row = conn.execute(
+                f"SELECT COUNT(*) AS c FROM resources WHERE {where}",
+                params,
+            ).fetchone()
+            total = int(total_row["c"]) if total_row else 0
+            rows = conn.execute(
+                f"""
+                SELECT * FROM resources
+                WHERE {where}
+                ORDER BY name COLLATE NOCASE
+                LIMIT ? OFFSET ?
+                """,
+                (*params, limit, offset),
+            ).fetchall()
+
+        return [_row_to_resource(row) for row in rows], total
 
     def upsert(self, resource: Resource) -> Resource:
         """Insert or update by resource id. Preserves created_at on update."""

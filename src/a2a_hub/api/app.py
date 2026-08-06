@@ -1,13 +1,14 @@
-"""FastAPI application factory (Day 1 foundation)."""
+"""FastAPI application factory — public read-only Resource API."""
 
 from __future__ import annotations
 
-from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
 from a2a_hub import __version__
+from a2a_hub.api.routes import router
 from a2a_hub.config import Settings, get_settings
 from a2a_hub.store.database import Database
 
@@ -15,8 +16,8 @@ from a2a_hub.store.database import Database
 def create_app(settings: Settings | None = None) -> FastAPI:
     """Build the FastAPI application.
 
-    Day 1 exposes a health endpoint only. Search and resource routes
-    arrive later in Sprint 1. Crawl remains CLI-only (ADR-008).
+    Exposes ``GET /health``, ``GET /search``, ``GET /resources/{id}``.
+    Crawl remains CLI-only (ADR-008). No auth (ADR-009).
     """
     settings = settings or get_settings()
 
@@ -34,21 +35,5 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         lifespan=lifespan,
     )
     app.state.settings = settings
-
-    @app.get("/health")
-    def health() -> dict[str, object]:
-        """Liveness probe for the API process."""
-        db: Database | None = getattr(app.state, "db", None)
-        resources_count = 0
-        if db is not None:
-            with db.connect() as conn:
-                row = conn.execute("SELECT COUNT(*) AS c FROM resources").fetchone()
-                resources_count = int(row["c"]) if row else 0
-        return {
-            "status": "ok",
-            "app": settings.app_name,
-            "version": __version__,
-            "resources_count": resources_count,
-        }
-
+    app.include_router(router)
     return app

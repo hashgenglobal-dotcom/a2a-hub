@@ -117,6 +117,15 @@
 - [ ] SSRF protection (block private/link-local/metadata endpoints)
 - [ ] Redirect limits
 
+### P1.6 — Resource Validation Metadata
+
+**Future trust layer needs history on each Resource.** Not Sprint 1 Task #4.
+
+**Tasks:**
+- [ ] `validation_status` on Resource
+- [ ] `validation_warnings` (persisted warning codes/messages)
+- [ ] `last_verified_at`
+
 ---
 
 ## P2 — Phase 2: Trust & Intelligence
@@ -139,6 +148,15 @@
 - [ ] Bounded asyncio worker pool for seed fetches
 - [ ] Shared aiohttp connection pool
 - [ ] Concurrency config (default conservative)
+
+### P2.0c — Resource Version History
+
+**Future only.** Enables agent evolution tracking, reputation, and trust scoring.
+
+**Tasks:**
+- [ ] `resource_versions` table (`resource_id`, `timestamp`, `previous_hash`, `changes`)
+- [ ] Record snapshot/diff on Resource upsert
+- [ ] API to list version history for a resource
 
 ### P2.1 — Semantic Search
 
