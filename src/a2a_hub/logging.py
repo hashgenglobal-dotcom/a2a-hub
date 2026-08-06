@@ -1,4 +1,8 @@
-"""Structured JSON-friendly logging (stdlib only)."""
+"""Structured JSON-friendly logging (stdlib only).
+
+Policy: never log raw HTTP bodies, Authorization headers, cookies, or API keys.
+See docs/implementation/LOGGING.md.
+"""
 
 from __future__ import annotations
 

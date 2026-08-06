@@ -1,4 +1,4 @@
-# A2A Hub MVP image
+# A2A Hub MVP image (Python 3.11+; 3.12 used for current slim base)
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \

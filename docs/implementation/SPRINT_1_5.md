@@ -1,56 +1,52 @@
 # Sprint 1.5 — MVP Release Hardening
 
 **Goal:** Production-readiness pass before public deployment.  
-**Status:** In progress  
-**Does not include:** Live deploy to Railway/Render/Fly (manual follow-up).
+**Status:** Complete (code/docs). Cloud deploy remains a manual follow-up.  
+**Does not include:** Phase 2 features (trust, embeddings, auth, federation, Postgres, workers).
 
 ---
 
 ## Tasks
 
-### A — Environment documentation
+### 1 — README release update
 
-- [x] README: install, crawl, serve, configuration, API examples, Docker, deploy recommendation
+- [x] What A2A Hub is, problem, architecture, MVP capabilities
+- [x] Quick start, CLI, API examples, UI example, roadmap, Docker
 
-### B — Docker support
+### 2 — Docker support
 
-- [x] `Dockerfile`
+- [x] `Dockerfile` (Python 3.12-slim / 3.11+ compatible package)
 - [x] `.dockerignore`
+- [x] Documented `docker build` / `docker run`
 
-### C — Health improvement
+### 3 — Production configuration
 
-- [x] `/health` returns `status`, `database`, `resources`, `version`
+- [x] `config.py` env vars + safe defaults
+- [x] `.env.example`
 
-### D — Logging verification
+### 4 — Health endpoint
 
-- [x] Startup log on serve
-- [x] Crawl / validation logs already emit structured JSON
-- [x] Unit test for JSON log formatter
+- [x] `GET /health` → status, database, resources, version
 
-### E — GitHub release preparation
+### 5 — Logging verification
 
-- [x] `CHANGELOG.md` for `v0.1.0`
-- [x] `docs/implementation/RELEASE_NOTES_v0.1.0.md` draft for GitHub Release
+- [x] Startup / crawl / validation warning paths
+- [x] Policy: no raw bodies / secrets in logs (`docs/implementation/LOGGING.md`)
+
+### 6 — Release checklist
+
+- [x] Root [`RELEASE.md`](../../RELEASE.md)
+
+### 7 — Final test pass
+
+- [x] `pytest -q` (run in CI / before tag)
 
 ---
 
-## Deployment recommendation (not executed in this sprint)
-
-| Item | Choice |
-|------|--------|
-| Platform | Railway / Render / Fly.io |
-| Process | Single FastAPI (`python -m a2a_hub serve`) |
-| Storage | Persistent **SQLite volume** |
-| Database | **Do not** move to Postgres yet |
-| Crawl | One-shot `python -m a2a_hub crawl` (CLI), not on boot |
+## Deployment recommendation (not executed here)
 
 ```
-Internet
-   │
-   ▼
-FastAPI
-   ├── JSON API
-   ├── Jinja UI
-   ▼
-SQLite volume
+Internet → FastAPI (API + Jinja UI) → SQLite volume
 ```
+
+Railway / Render / Fly.io. **Keep SQLite.** Do not move to Postgres yet.

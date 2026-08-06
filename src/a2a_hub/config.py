@@ -1,4 +1,8 @@
-"""Application configuration via environment variables and defaults."""
+"""Application configuration via environment variables and defaults.
+
+See ``.env.example`` for documented ``A2A_HUB_*`` settings. Defaults are safe
+for local MVP use (bind all interfaces on port 8000, SQLite under ``data/``).
+"""
 
 from __future__ import annotations
 
