@@ -60,7 +60,7 @@ def cmd_serve(settings: Settings) -> int:
             }
         },
     )
-    uvicorn.run(app, host=settings.host, port=settings.port, log_config=None)
+    uvicorn.run(app, host=settings.host, port=settings.effective_port, log_config=None)
     return 0
 
 

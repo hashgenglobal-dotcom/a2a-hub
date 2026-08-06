@@ -43,6 +43,12 @@ class Settings(BaseSettings):
     host: str = Field(default="0.0.0.0", description="API bind host")
     port: int = Field(default=8000, ge=1, le=65535, description="API bind port")
 
+    @property
+    def effective_port(self) -> int:
+        """Return the port to bind, respecting the standard PORT env var used by Railway/Render/Fly.io."""
+        import os
+        return int(os.environ.get("PORT", self.port))
+
 
 @lru_cache
 def get_settings() -> Settings:
