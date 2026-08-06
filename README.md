@@ -6,6 +6,32 @@
 
 ---
 
+## Repository Governance
+
+This repository intentionally separates long-term vision from the current implementation.
+
+**Only one document defines what engineers build:**
+
+[`docs/implementation/MVP_SPEC.md`](docs/implementation/MVP_SPEC.md)
+
+Everything else exists for context.
+
+### Priority Order
+
+1. `docs/implementation/MVP_SPEC.md` — **Implementation source of truth. Wins all conflicts.**
+2. `docs/implementation/SPRINT_XX.md` — Current sprint plan.
+3. `docs/implementation/BACKLOG.md` — Prioritized backlog.
+4. `docs/architecture/ARCHITECTURE_MVP.md` — Current architecture.
+5. `docs/architecture/DOMAIN_MODEL_MVP.md` — Current domain model.
+6. `docs/architecture/ENGINEERING_PRINCIPLES.md` — Engineering standards.
+7. `docs/strategy/VISION.md` — Long-term product vision.
+
+If any document conflicts with `MVP_SPEC.md`, `MVP_SPEC.md` always wins.
+
+Target architecture documents (`ARCHITECTURE_TARGET.md`, `DOMAIN_MODEL_TARGET.md`) never define current implementation. They exist for planning only.
+
+---
+
 ## What This Is
 
 A2A Hub is an open-source infrastructure project. It provides a unified control plane for discovering, verifying, monitoring, and governing AI resources across any platform, protocol, or organization.
