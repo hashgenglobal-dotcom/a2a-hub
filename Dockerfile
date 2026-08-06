@@ -15,12 +15,14 @@ COPY src ./src
 COPY config ./config
 COPY samples ./samples
 COPY scripts ./scripts
+COPY entrypoint.sh ./entrypoint.sh
 
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir . \
-    && mkdir -p /app/data
+    && mkdir -p /app/data \
+    && chmod +x /app/entrypoint.sh
 
 EXPOSE 8000
 
-# Serve only — crawl is a separate one-shot command (ADR-008)
-CMD ["python", "-m", "a2a_hub", "serve"]
+# Entrypoint: crawl on first boot, then serve
+CMD ["/app/entrypoint.sh"]
