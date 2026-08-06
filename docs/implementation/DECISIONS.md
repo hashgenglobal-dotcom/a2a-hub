@@ -161,3 +161,19 @@ Engineering diary for A2A Hub. Each entry records a decision, its rationale, and
 **Decision:** Minimal Jinja2 UI at `GET /` (search) and HTML `GET /resources/{id}` via Accept negotiation; JSON API unchanged for non-HTML clients.
 **Reason:** Human discovery without a frontend framework; no duplicated search SQL (repository shared).
 **Reference:** Sprint 1 Day 5 / Task #5; BUILD_SPEC capability 6
+
+---
+
+## 2026-08-06 — Sprint 1.5 (MVP hardening)
+
+**Decision:** Enrich `/health` with `database`, `resources`, and `version` before public demo.
+**Reason:** Operators need a one-call readiness signal without querying the registry separately.
+**Reference:** Sprint 1.5
+
+**Decision:** Ship `Dockerfile` + `.dockerignore` for repeatable demos; keep SQLite volume architecture (no Postgres yet).
+**Reason:** Deployment repeatability without changing the MVP data plane.
+**Reference:** Sprint 1.5; ADR-001
+
+**Decision:** Prepare `v0.1.0` release notes/changelog but do not auto-deploy in this pass.
+**Reason:** Hardening before public exposure; deploy is a deliberate follow-up on Railway/Render/Fly.
+**Reference:** Sprint 1.5

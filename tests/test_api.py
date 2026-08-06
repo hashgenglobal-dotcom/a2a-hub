@@ -41,7 +41,11 @@ def test_api_health(tmp_path: Path) -> None:
     with TestClient(create_app(settings)) as client:
         response = client.get("/health")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+    body = response.json()
+    assert body["status"] == "ok"
+    assert body["database"] == "connected"
+    assert body["resources"] == 0
+    assert body["version"] == "0.1.0"
 
 
 def test_search_returns_matching_resource(tmp_path: Path) -> None:

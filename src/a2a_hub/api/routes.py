@@ -41,10 +41,28 @@ def _resource_detail(resource: Resource) -> dict[str, Any]:
 
 
 @router.get("/health")
-def health(request: Request) -> dict[str, str]:
-    """Liveness probe (read-only)."""
-    _ = get_db(request)
-    return {"status": "ok"}
+def health(request: Request) -> dict[str, Any]:
+    """Liveness / readiness probe with basic registry stats."""
+    from a2a_hub import __version__
+
+    db = get_db(request)
+    try:
+        with db.connect() as conn:
+            row = conn.execute("SELECT COUNT(*) AS c FROM resources").fetchone()
+            resources = int(row["c"]) if row else 0
+        return {
+            "status": "ok",
+            "database": "connected",
+            "resources": resources,
+            "version": __version__,
+        }
+    except Exception:
+        return {
+            "status": "degraded",
+            "database": "error",
+            "resources": 0,
+            "version": __version__,
+        }
 
 
 @router.get("/search")
