@@ -106,9 +106,39 @@
 - [ ] Crawl failure tracking
 - [ ] Basic metrics endpoint
 
+### P1.5 — Crawler Safety (Before Public Exposure)
+
+**Not Sprint 1.** Required before opening the crawler to arbitrary/public URLs at scale.
+
+**Tasks:**
+- [ ] Max response size limit
+- [ ] robots.txt policy decision (respect vs ignore — document choice)
+- [ ] URL allow/deny rules
+- [ ] SSRF protection (block private/link-local/metadata endpoints)
+- [ ] Redirect limits
+
 ---
 
 ## P2 — Phase 2: Trust & Intelligence
+
+### P2.0 — Crawl Metadata for Trust Scoring
+
+**Not needed for MVP.** Enrich `crawl_results` when trust scoring needs fetch provenance.
+
+**Tasks:**
+- [ ] `attempt_number`
+- [ ] `http_method`
+- [ ] `redirect_chain`
+- [ ] `tls_verified`
+
+### P2.0b — Concurrent Fetch Workers
+
+**Sequential fetch is correct for MVP.** Add asyncio worker pool / aiohttp connection pooling only when seed volume justifies it.
+
+**Tasks:**
+- [ ] Bounded asyncio worker pool for seed fetches
+- [ ] Shared aiohttp connection pool
+- [ ] Concurrency config (default conservative)
 
 ### P2.1 — Semantic Search
 

@@ -8,6 +8,8 @@ from pathlib import Path
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from a2a_hub.crawler.seeds import DEFAULT_SEEDS_PATH
+
 
 class Settings(BaseSettings):
     """Runtime settings for the A2A Hub MVP."""
@@ -24,9 +26,13 @@ class Settings(BaseSettings):
         default=Path("data/a2a_hub.db"),
         description="Path to the SQLite database file",
     )
+    seeds_path: Path = Field(
+        default=DEFAULT_SEEDS_PATH,
+        description="Path to seeds.json (Agent Card URL list)",
+    )
     crawler_timeout_seconds: float = Field(
         default=30.0,
-        ge=1.0,
+        ge=0.1,
         description="HTTP timeout for crawl fetches (seconds)",
     )
     log_level: str = Field(default="INFO", description="Logging level")
